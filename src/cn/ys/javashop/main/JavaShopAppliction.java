@@ -38,6 +38,7 @@ public class JavaShopAppliction {
 				new MemberCenterService().enterMemberCenter();
 				break;
 			case "2":
+				
 				break;
 			case "3":
 				break;

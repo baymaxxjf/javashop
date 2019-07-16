@@ -1,15 +1,24 @@
 package cn.ys.javashop.service;
 
+import java.util.List;
 import java.util.Scanner;
 
 import cn.ys.javashop.common.Common;
 import cn.ys.javashop.contant.Contant;
+import cn.ys.javashop.dao.OrdersDao;
+import cn.ys.javashop.dao.UsersDao;
+import cn.ys.javashop.entity.Orders;
+import cn.ys.javashop.entity.Users;
 import cn.ys.javashop.main.JavaShopAppliction;
 import cn.ys.javashop.ui.UI;
+import cn.ys.javashop.util.DBUtils;
 
 public class MemberCenterService {
 	private Scanner scanner = JavaShopAppliction.scanner;
 	private boolean topFlag = true;
+	private UsersDao usersDao = new UsersDao();
+	private OrdersDao odersDao = new OrdersDao();
+	private Common common = new Common();
 	public void enterMemberCenter() {
 		
 		// 错误输入计数
@@ -56,8 +65,8 @@ public class MemberCenterService {
 	 
 	
 	public void updatePassword(){
-		boolean result = new Common().login();
-		if(result){
+		Users result = common.login();
+		if(result !=null ){
 			int count = 0;
 			boolean flag1 =true;
 			outerLoop:
@@ -67,8 +76,8 @@ public class MemberCenterService {
 				String newPassword =scanner.next();
 				System.out.println("请再一次输入新密码确认：");
 				String confirmPassword = scanner.next();
-				if(newPassword!="" && newPassword == confirmPassword){
-					boolean updateResult = updateUser();
+				if(newPassword!="" && newPassword.equals(confirmPassword)){
+					boolean updateResult = usersDao.updatePassword(result.getId(),newPassword);
 					if(updateResult){
 						System.out.println("更新成功，按#返回上一级,按0返回顶层。请输入：");
 						int innerCount = 0;
@@ -117,9 +126,11 @@ public class MemberCenterService {
 	}
 	
 	public void myOrder() {
-		boolean result = new Common().login();
-		if(result){
-			
+		Users user = common.login();
+		if(user !=null){
+			List<Orders> orderLists = odersDao.selectOrders(user.getId());
+			System.out.println(orderLists);
+			UI.orderInfoUI(orderLists);
 		}else{
 			
 		}

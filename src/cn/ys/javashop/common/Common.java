@@ -1,10 +1,14 @@
 package cn.ys.javashop.common;
 import cn.ys.javashop.main.JavaShopAppliction;
+
 import java.util.Scanner;
 import cn.ys.javashop.contant.Contant;
+import cn.ys.javashop.dao.UsersDao;
+import cn.ys.javashop.entity.Users;
 public class Common {
     private Scanner scanner = JavaShopAppliction.scanner;
-    public boolean login() {
+    private UsersDao usersDao = new UsersDao();
+    public Users login() {
 		boolean flag = true;
 		int outerCount = 0;
 		outerLoop:
@@ -14,8 +18,8 @@ public class Common {
 			String userName = scanner.next();
 			System.out.println("请输入登录密码:");
 			String password = scanner.next();
-			boolean result = true; //updateUser();
-			if(result){
+			Users result = usersDao.login(userName, password); //updateUser();
+			if(result!=null){
 				System.out.println("************登录成功，接下来进入登录之前的操作************");
 				return result;
 			}else{
@@ -27,8 +31,6 @@ public class Common {
 					
 					String option = scanner.next();
 					if("#".equals(option) ){
-						// flag2= false;
-						// flag = false;
 						break outerLoop;
 					}else if("1".equals(option)){
 						flag2= false;
@@ -36,7 +38,6 @@ public class Common {
 						count++;
 						if(count>Contant.MAX_TRY){
 							System.out.println("输入错误次数超过"+Contant.MAX_TRY+"次，自动返回上一层");
-							// flag2 = false;
 							break outerLoop;
 						}else{
 							System.out.println("输入不合法，请输入重新输入：");
@@ -51,7 +52,7 @@ public class Common {
 				break outerLoop;
 			}
 		} while (flag);
-		return false;
+		return null;
 	}
 }
 
