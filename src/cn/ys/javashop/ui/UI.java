@@ -54,8 +54,12 @@ public class UI {
 			);
 			System.out.println("商品明细如下：");
 			System.out.println("商品名称            商品单价          商品数量           小计金额 ");
-			for(OrderDetail item : item.get){
-				
+			for(OrderDetail i : item.getOrderDetailLists()){
+				System.out.println(i.getGoods().getGoodsName()+"\t"+
+								   i.getGoods().getPrice()+"\t"+
+								   i.getNumber()+"\t"+
+								   i.getNumber().multiply(i.getGoods().getPrice())
+				);
 			}
 			System.out.println("------------------------------------------------------------------");
 		}

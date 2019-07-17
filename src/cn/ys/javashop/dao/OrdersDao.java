@@ -18,7 +18,6 @@ public class OrdersDao {
 		Users users = null;
 		Orders order =null;
 		List<Orders> orderLists = null;
-		
 		if(orders != null){
 			orderLists = new ArrayList<>();
 			try {
@@ -28,7 +27,7 @@ public class OrdersDao {
 					order = new Orders();
 					users.setRealName(orders.getString("realName"));
 					order.setId(orders.getInt("id"));
-					orderdetailLists = selectOrderDetails(order.getId());
+					orderdetailLists = selectOrderDetails(orders.getInt("id"));
 					order.setOrderDetailLists(orderdetailLists);
 					order.setUsers(users);
 					order.setAddDate(orders.getDate("addDate"));
@@ -53,10 +52,10 @@ public class OrdersDao {
 		List<OrderDetail> orderdetailLists =null;
 		if(rs !=null){
 			orderdetailLists = new ArrayList<>();
-			good = new Goods();
-			orderDetail = new OrderDetail();
 			try {
 				while (rs.next()) {
+					orderDetail = new OrderDetail();
+					good = new Goods();
 					good.setGoodsName(rs.getString("goodsName"));
 					good.setPrice(rs.getBigDecimal("price"));
 					orderDetail.setNumber(rs.getBigDecimal("number"));
