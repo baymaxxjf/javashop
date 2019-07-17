@@ -2,6 +2,8 @@ package cn.ys.javashop.ui;
 
 import java.util.List;
 
+import cn.ys.javashop.entity.Gift;
+import cn.ys.javashop.entity.Goods;
 import cn.ys.javashop.entity.OrderDetail;
 import cn.ys.javashop.entity.Orders;
 
@@ -40,7 +42,7 @@ public class UI {
 	
 	public static void orderInfoUI(List<Orders> orderLists) {
 		System.out.println("您的订单信息如下：");
-		System.out.println("订单信息如下：");
+//		System.out.println("订单信息如下：");
 		System.out.println("订单数量："+ orderLists.size());
 		for(Orders item : orderLists){
 			System.out.println("------------------------------------------------------------------");
@@ -65,6 +67,24 @@ public class UI {
 		}
 	}
 	
+	public static void giftInfoUI(List<Gift> giftLists){
+		System.out.println("您获的礼物如下：");
+		System.out.println("礼物数量："+giftLists.size());
+		System.out.println("------------------------------------------------------------------");
+		System.out.println("礼物名称"+"\t"+"礼物价值");
+		for(Gift item : giftLists){
+			System.out.println(item.getGiftName()+"\t"+item.getPrice());
+		}
+		System.out.println("------------------------------------------------------------------");
+	}
+	
+	public static void goodInfoUI(List<Goods> goodLists){
+		System.out.println("商品列表如下，请输入你要购买的商品编号：");
+		System.out.println("商品编号            商品名称          商品价格 ");
+		for(Goods item : goodLists){
+			System.out.println(item.getId()+"\t"+item.getGoodsName()+"\t\t\t"+item.getPrice());
+		}
+	}
 	
 
 }

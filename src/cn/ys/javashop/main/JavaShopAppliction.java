@@ -5,11 +5,14 @@ import java.util.Scanner;
 import cn.ys.javashop.contant.Contant;
 import cn.ys.javashop.service.LoginService;
 import cn.ys.javashop.service.MemberCenterService;
+import cn.ys.javashop.service.ShoppingService;
 import cn.ys.javashop.ui.UI;
 
 public class JavaShopAppliction {
 	public final static Scanner scanner = new Scanner(System.in);
 	public  static LoginService loginService = new LoginService();
+	private static MemberCenterService memberCenterService = new MemberCenterService();
+	private static ShoppingService shoppingService = new ShoppingService();
 	public static void main(String[] args) {
 		
 		System.out.println("欢迎来到命令行商城！");
@@ -35,10 +38,10 @@ public class JavaShopAppliction {
 			
 			switch (option) {
 			case "1":
-				new MemberCenterService().enterMemberCenter();
+				memberCenterService.enterMemberCenter();
 				break;
 			case "2":
-				
+				shoppingService.enterShopping();
 				break;
 			case "3":
 				break;

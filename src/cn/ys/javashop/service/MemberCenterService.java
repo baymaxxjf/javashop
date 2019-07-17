@@ -9,6 +9,7 @@ import cn.ys.javashop.contant.Contant;
 import cn.ys.javashop.dao.GiftsDao;
 import cn.ys.javashop.dao.OrdersDao;
 import cn.ys.javashop.dao.UsersDao;
+import cn.ys.javashop.entity.Gift;
 import cn.ys.javashop.entity.Orders;
 import cn.ys.javashop.entity.Usergift;
 import cn.ys.javashop.entity.Users;
@@ -166,7 +167,9 @@ public class MemberCenterService {
 	public void myGift(){
 		Users user = common.login();
 		if(user !=null){
-			List<Usergift> giftLists = giftsDao.selectGifts(user.getId());
+			List<Gift> giftLists = giftsDao.selectGifts(user.getId());
+			UI.giftInfoUI(giftLists);
+			commonStep();
 		}
 	}
 

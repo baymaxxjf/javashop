@@ -1,8 +1,10 @@
 package cn.ys.javashop.dao;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.ys.javashop.entity.Goods;
@@ -67,5 +69,36 @@ public class OrdersDao {
 			}
 		}
 		return orderdetailLists;
+	}
+
+	public boolean updateOrders(int id, HashMap<Integer, Integer> gooIdToNumMap, BigDecimal count) {
+		int total = countOrders(id);
+		if(total != -1){
+			String sql1 = "insert into orders (id, userId, total, addDate, isPay) VALUES (?, ?, ?, ?, '0');";
+			boolean rs = DBUtils.update(sql1, total+1, id , count );
+			if(rs){
+				String sql2 = "insert into orderdetail (id, userId, total, addDate, isPay) VALUES (?, ?, ?, ?, '0');";
+			}else{
+				System.out.println("插入记录失败");
+			}
+		}else{
+			System.out.println("查询订单数失败");
+		}
+		return false;
+	}
+	
+	private int countOrders(int id){
+		String sql = "select count(*) total from orders where userId = ?";
+		ResultSet rs = DBUtils.selectOrders(sql, id);
+		int total =-1;
+		if(rs != null){
+			try{
+				if(rs.next()){
+					total = rs.getInt("total");
+				}
+			}catch (Exception e) {
+			}
+		}
+		return total;
 	}
 }
