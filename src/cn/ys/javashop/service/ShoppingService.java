@@ -61,13 +61,13 @@ public class ShoppingService {
 		Users user = common.login();
 		if(user !=null){
 			List<Goods> goodsLists = goodsDao.selectGoods();
-			UI.goodInfoUI(goodsLists);
-			commonStep();
-			
+			UI.goodInfoUI(goodsLists);		
 			//
 			HashMap<Integer, Integer> gooIdToNumMap= new HashMap<>();
 			// 计算总订单金额
 			BigDecimal total = new BigDecimal(0);
+			boolean selectShopsFlag = true;
+			int count = 0;
 			do {
 				boolean flag = true;
 				do {
@@ -76,7 +76,8 @@ public class ShoppingService {
 						int goodsId = scanner.nextInt();
 						for(int i=0 ;i<goodsLists.size(); i++ ){
 							if(goodsId == goodsLists.get(i).getId()){
-								total.add(goodsLists.get(i).getPrice());
+								count++;
+								total = total.add(goodsLists.get(i).getPrice());
 								if(gooIdToNumMap.containsKey(goodsId)){
 									Integer value = gooIdToNumMap.get(goodsId)+1;
 									gooIdToNumMap.put(goodsId, value);
@@ -99,7 +100,33 @@ public class ShoppingService {
 				System.out.println("商品已加入到购物车，继续选购请按1，结算请按2，返回请按#");
 				String option = scanner.next();
 				if("2".equals(option)){
-					boolean result = ordersDao.updateOrders(user.getId(), gooIdToNumMap,total);
+					int orderId = ordersDao.updateOrders(user.getId(), gooIdToNumMap,total);
+					if(orderId != -1){
+						do {
+							System.out.println("您的购物车中有个"+count+"产品，确定购买吗？按y付款，按#退出");
+							String isPay = scanner.next();
+							if("y".equals(isPay)){
+								boolean hasPay = ordersDao.updatePay(user.getId(), orderId,"1");
+								if(hasPay){
+									System.out.println("购买成功,有"+count+"条产品被购买");
+									commonStep();
+									selectShopsFlag =false;
+									break;
+								}else{
+									System.out.println("更新失败");
+								}
+							}else if ("#".equals(isPay)){
+								System.out.println("退出购买");
+								selectShopsFlag =false;
+								break;
+							}else {
+								System.out.println("输入有误，请重试");
+							}
+						} while (true);
+						
+					}else{
+						System.out.println("订单插入失败");
+					}
 				}else if("#".equals(option)){
 					break;
 				}else if("1".equals(option)){
@@ -108,9 +135,11 @@ public class ShoppingService {
 					System.out.println("你输入的指令不合法，请重新输入");
 				}
 				
-			} while (true);
+			} while (selectShopsFlag);
+		
 		}
 	}
+	
 	
 	private void commonStep() {
 		System.out.println("更新成功，按#返回上一级,按0返回顶层。请输入：");

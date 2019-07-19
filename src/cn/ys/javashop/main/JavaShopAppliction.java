@@ -6,6 +6,7 @@ import cn.ys.javashop.contant.Contant;
 import cn.ys.javashop.service.LoginService;
 import cn.ys.javashop.service.MemberCenterService;
 import cn.ys.javashop.service.ShoppingService;
+import cn.ys.javashop.service.TryLuckyService;
 import cn.ys.javashop.ui.UI;
 
 public class JavaShopAppliction {
@@ -13,6 +14,7 @@ public class JavaShopAppliction {
 	public  static LoginService loginService = new LoginService();
 	private static MemberCenterService memberCenterService = new MemberCenterService();
 	private static ShoppingService shoppingService = new ShoppingService();
+	private static TryLuckyService tryLuckyService =new TryLuckyService();
 	public static void main(String[] args) {
 		
 		System.out.println("欢迎来到命令行商城！");
@@ -44,8 +46,8 @@ public class JavaShopAppliction {
 				shoppingService.enterShopping();
 				break;
 			case "3":
-				break;
-				
+				tryLuckyService.enterTryLucky();
+				break;		
 			default:
 				if(i>Contant.MAX_TRY){
 					System.out.println("输入错误次数过多，退出系统");

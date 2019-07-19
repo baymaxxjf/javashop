@@ -3,9 +3,14 @@ package cn.ys.javashop.dao;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import cn.ys.javashop.entity.Goods;
 import cn.ys.javashop.entity.OrderDetail;
@@ -71,20 +76,30 @@ public class OrdersDao {
 		return orderdetailLists;
 	}
 
-	public boolean updateOrders(int id, HashMap<Integer, Integer> gooIdToNumMap, BigDecimal count) {
+	public int updateOrders(int id, HashMap<Integer, Integer> gooIdToNumMap, BigDecimal count) {
 		int total = countOrders(id);
 		if(total != -1){
+			Date date =new Date();
+			String dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date);
+			Timestamp timestamp = Timestamp.valueOf(dateFormat);
 			String sql1 = "insert into orders (id, userId, total, addDate, isPay) VALUES (?, ?, ?, ?, '0');";
-			boolean rs = DBUtils.update(sql1, total+1, id , count );
+			boolean rs = DBUtils.update(sql1, total+1, id , count, timestamp );
 			if(rs){
-				String sql2 = "insert into orderdetail (id, userId, total, addDate, isPay) VALUES (?, ?, ?, ?, '0');";
+				for(Entry<Integer, Integer> entry :gooIdToNumMap.entrySet()){
+					String sql2 = "insert into orderdetail ( orderId, goodsId, number) VALUES ( ?, ?, ?);";
+					boolean rs1 = DBUtils.update(sql2, total+1,entry.getKey(), entry.getValue() );
+					if(!rs1){
+						total = -1;
+					}
+				}
+				
 			}else{
-				System.out.println("²åÈë¼ÇÂ¼Ê§°Ü");
+				total = -1;
 			}
 		}else{
-			System.out.println("²éÑ¯¶©µ¥ÊýÊ§°Ü");
+//			total = -1;
 		}
-		return false;
+		return total+1;
 	}
 	
 	private int countOrders(int id){
@@ -100,5 +115,14 @@ public class OrdersDao {
 			}
 		}
 		return total;
+	}
+
+	public boolean updatePay(int id, int orderId,String isPay) {
+		String sql = "update orders set isPay = ? where userId = ? and id = ?";
+		Boolean resultSet = DBUtils.update(sql, isPay, id, orderId);
+		if(resultSet){
+			return true;
+		}
+		return false;
 	}
 }

@@ -3,6 +3,7 @@ package cn.ys.javashop.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import cn.ys.javashop.entity.Gift;
 import cn.ys.javashop.entity.Users;
 import cn.ys.javashop.util.DBUtils;
 
@@ -33,4 +34,31 @@ public class UsersDao {
 		String sql = "update Users set loginPwd = ? where id = ?";
 		return DBUtils.update(sql,newPassword , id);
 	}
+
+	public boolean addUserGift(int id, int luckNumber) {
+		String sql = "insert into usergift ( userId, giftId) value( ?, ?)";
+		
+		return DBUtils.update(sql,id, luckNumber );
+	}
+
+	public Gift selectGiftById(int luckNumber) {
+		String sql = "select * from gift where id = ? ";
+		ResultSet rs = DBUtils.getResultSet(sql, luckNumber);
+		Gift gift =null;
+		
+		try {
+			if(rs.next()){
+				gift = new Gift();
+				gift.setGiftName(rs.getString("giftName"));
+				gift.setPrice(rs.getBigDecimal("price"));
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return gift;
+	}
+
+	
 }
