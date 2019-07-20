@@ -3,7 +3,6 @@ package cn.ys.javashop.main;
 import java.util.Scanner;
 
 import cn.ys.javashop.contant.Contant;
-import cn.ys.javashop.service.LoginService;
 import cn.ys.javashop.service.MemberCenterService;
 import cn.ys.javashop.service.ShoppingService;
 import cn.ys.javashop.service.TryLuckyService;
@@ -11,7 +10,6 @@ import cn.ys.javashop.ui.UI;
 
 public class JavaShopAppliction {
 	public final static Scanner scanner = new Scanner(System.in);
-	public  static LoginService loginService = new LoginService();
 	private static MemberCenterService memberCenterService = new MemberCenterService();
 	private static ShoppingService shoppingService = new ShoppingService();
 	private static TryLuckyService tryLuckyService =new TryLuckyService();

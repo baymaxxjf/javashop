@@ -5,8 +5,7 @@ import java.util.Scanner;
 
 import cn.ys.javashop.common.Common;
 import cn.ys.javashop.contant.Contant;
-import cn.ys.javashop.dao.GoodsDao;
-import cn.ys.javashop.dao.OrdersDao;
+
 import cn.ys.javashop.dao.UsersDao;
 import cn.ys.javashop.entity.Gift;
 import cn.ys.javashop.entity.Users;
@@ -18,8 +17,6 @@ public class TryLuckyService {
 	private boolean topFlag = true;
 	private Common common = new Common();
 	private UsersDao usersDao = new UsersDao();
-//	private GoodsDao goodsDao = new GoodsDao();
-//	private OrdersDao ordersDao = new OrdersDao();
 	public void enterTryLucky() {
 		// 错误输入计数
 		int  i = 0;
@@ -55,6 +52,7 @@ public class TryLuckyService {
 	
 	public void selectLuckyNumber() {
 		Users user = common.login();
+		boolean selectLuckyNumberFlag = true;
 		if(user !=null){
 			// 3次抽奖机会
 			int chance = 3;
@@ -62,56 +60,71 @@ public class TryLuckyService {
 			do {
 				chance--;
 				System.out.println("请在0-9之间输入任意选择一个数，作为你的幸运数字。");
-				System.out.println("请输入：");
+				int luckNumber;
 				
-				try {
-					int luckNumber = scanner.nextInt();
-					int randomLuckNumber = random.nextInt(1);
-					if(luckNumber == randomLuckNumber){
-						boolean result = usersDao.addUserGift(user.getId(),luckNumber+1);
-						if(result){
-							System.out.println("恭喜，您获得如下礼物：");
-							Gift gift = usersDao.selectGiftById(luckNumber+1);
-							System.out.println("名称："+gift.getGiftName()+"，价值："+gift.getPrice()+",可在'我的礼物中查看'" );
-							if(chance>-1){
+				 while (true) {
+					System.out.println("请输入：");
+					try {
+						
+						luckNumber = scanner.nextInt();
+						break;
+					} catch (Exception e) {
+						System.out.println("输入错误，请重试");
+						scanner.next();
+					}
+				};
+				int randomLuckNumber = random.nextInt(10);
+				if(luckNumber == randomLuckNumber){
+					boolean result = usersDao.addUserGift(user.getId(),luckNumber+1);
+					if(result){
+						System.out.println("恭喜，您获得如下礼物：");
+						Gift gift = usersDao.selectGiftById(luckNumber+1);
+						System.out.println("名称："+gift.getGiftName()+"，价值："+gift.getPrice()+",可在'我的礼物中查看'" );
+						if(chance>-1){ 
+							do {
 								System.out.println("继续请按1，返回请按#");
 								System.out.println("请输入：");
 								String option = scanner.next();
 								if("1".equals(option)){
-									
+									break;
 								}else if("#".equals(option)){
+									selectLuckyNumberFlag =false;
 									break;
 								}else {
 									System.out.println("输入错误，请重试");
 								}
-							}else{
-								commonStep();
-								break;
-							}
-							
+							} while (true);
 							
 						}else{
-							System.out.println("更新失败");
+							commonStep();
+							break;
 						}
-					}else {
-						System.out.println("很遗憾，你未能获取礼物，本次幸运数是："+randomLuckNumber+"你还有"+chance+"机会");
+						
+						
+					}else{
+						System.out.println("更新失败");
+					}
+				}else {
+					
+					System.out.println("很遗憾，你未能获取礼物，本次幸运数是："+randomLuckNumber+"你还有"+chance+"机会");
+					if(chance == 0) {
+						break;
+					}
+					do {
 						System.out.println("继续请按1，返回请按#");
 						System.out.println("请输入：");
 						String option = scanner.next();
 						if("1".equals(option)){
-							
+							break;
 						}else if("#".equals(option)){
+							selectLuckyNumberFlag =false;
 							break;
 						}else {
 							System.out.println("输入错误，请重试");
 						}
-					}
-				} catch (Exception e) {
-					System.out.println("输入错误，请重试");
+					} while (true);
 				}
-				
-				
-			} while (chance>-1);
+			} while (selectLuckyNumberFlag);
 		}
 	}
 	

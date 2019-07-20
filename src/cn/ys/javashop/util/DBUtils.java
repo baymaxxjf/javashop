@@ -15,7 +15,7 @@ import cn.ys.javashop.entity.Orders;
 public class DBUtils {
 	private final static String URL = "jdbc:mysql://localhost:3306/javashop";
 	private final static String USERNAME = "root";
-	private final static String PASSWORD = "root";
+	private final static String PASSWORD = "root1997";
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private static PreparedStatement ps = null;
 	private static ResultSet rs = null;
@@ -80,6 +80,7 @@ public class DBUtils {
 		}
 		return null;
 	}
+	
 	
 	
 
